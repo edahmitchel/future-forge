@@ -1,0 +1,17 @@
+{
+  "name": "week6-relationships-pagination",
+  "version": "1.0.0",
+  "description": "Week 6: Relationships, Pagination & Query Optimization with MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.0"
+  }
+}

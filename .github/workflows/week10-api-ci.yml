@@ -1,0 +1,58 @@
+name: Week10 API CI/CD
+
+on:
+  pull_request:
+    paths:
+      - week8-async-jobs/**
+      - .github/workflows/week10-api-ci.yml
+  push:
+    branches:
+      - main
+    paths:
+      - week8-async-jobs/**
+      - .github/workflows/week10-api-ci.yml
+
+jobs:
+  ci:
+    name: CI Checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: week8-async-jobs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: week8-async-jobs/yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Syntax check
+        run: |
+          find . -name "*.js" -not -path "./node_modules/*" -print0 | xargs -0 -n1 node --check
+
+      - name: Dependency audit (high/critical)
+        run: yarn npm audit --severity high
+
+  deploy:
+    name: Trigger Deploy Hook
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+      secrets.RENDER_DEPLOY_HOOK_URL != ''
+
+    steps:
+      - name: Trigger Render deploy hook
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

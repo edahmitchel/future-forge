@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "ci:check": "find . -name \"*.js\" -not -path \"./node_modules/*\" -print0 | xargs -0 -n1 node --check"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

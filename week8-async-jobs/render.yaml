@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: week8-async-jobs-api
+    runtime: node
+    rootDir: week8-async-jobs
+    buildCommand: yarn install --frozen-lockfile
+    startCommand: yarn start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
